@@ -41,6 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   config.vm.synced_folder "scripts", "/home/vagrant/scripts"
+  config.vm.synced_folder "templates", "/home/vagrant/templates"
 
   config.vm.provider "virtualbox" do |vb|
     # Don't boot with headless mode

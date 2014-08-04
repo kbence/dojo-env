@@ -1,0 +1,1 @@
+funit hiker_class

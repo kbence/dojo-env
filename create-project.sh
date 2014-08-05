@@ -71,12 +71,12 @@ sedize()
 
 APP_ROOT=$(dirname $0)
 
-PROJECT_NAME=$(read_line "Project name" "project-$RANDOM")
-TARGET_DIR="$APP_ROOT/projects/$PROJECT_NAME"
-
 cd $(dirname $0)
 check_environment
 start_vagrant
+
+PROJECT_NAME=$(read_line "Project name" "project-$RANDOM")
+TARGET_DIR="$APP_ROOT/projects/$PROJECT_NAME"
 
 choose_template
 TEMPLATE_NAME=$(basename $TEMPLATE)

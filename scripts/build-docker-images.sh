@@ -10,12 +10,7 @@ sanitize_image_name()
 
 get_files()
 {
-  manifest=$1
-  len=$(jq ".visible_filenames | length" "$manifest")
-
-  for i in $(seq 0 $(($len-1))); do
-    jq ".visible_filenames[$i]" "$manifest" | tr -d '"'
-  done
+  ls $1 | grep -v build-docker-container.sh | grep -v Dockerfile | grep -v manifest.json
 }
 
 if [ "$#" -gt 0 ]; then
@@ -35,8 +30,8 @@ for image in $IMAGES; do
     sudo docker build -t "$image_tag" "$IMAGE_ROOT/$image"
 
     mkdir -p "$TEMPLATE_ROOT/$image_name"
-    for file in $(get_files $manifest_file); do
-      cp "$IMAGE_ROOT/$image/$file" "$TEMPLATE_ROOT/$image_name/"
+    for file in $(get_files $IMAGE_ROOT/$image); do
+      cp -v "$IMAGE_ROOT/$image/$file" "$TEMPLATE_ROOT/$image_name/"
     done
   fi
 done

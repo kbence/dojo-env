@@ -1,3 +1,4 @@
+#!/bin/bash
 rm -f *.class
 GROOVY_HOME=/groovy-2.2.0
 PATH=$GROOVY_HOME/bin:$PATH

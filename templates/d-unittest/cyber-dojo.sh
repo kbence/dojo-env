@@ -1,3 +1,4 @@
+#!/bin/bash
 
 gdc hiker.d -funittest -o run-tests
 

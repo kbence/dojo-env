@@ -1,3 +1,4 @@
+#!/bin/bash
 
 fsharpc --nologo \
         --target:library \

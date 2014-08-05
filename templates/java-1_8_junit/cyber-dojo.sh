@@ -1,3 +1,4 @@
+#!/bin/bash
 rm -f *.class
 CLASSES=.:`ls *.jar | tr '\n' ':'`
 javac -Xlint:unchecked -Xlint:deprecation -cp $CLASSES  *.java

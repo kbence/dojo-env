@@ -10,7 +10,7 @@ sanitize_image_name()
 
 get_files()
 {
-  ls $1 | grep -v build-docker-container.sh | grep -v Dockerfile | grep -v manifest.json
+  ls $1 | grep -v build-docker-container.sh | grep -v Dockerfile | grep -v manifest.json | grep -v cyber-dojo.sh
 }
 
 if [ "$#" -gt 0 ]; then
@@ -33,5 +33,9 @@ for image in $IMAGES; do
     for file in $(get_files $IMAGE_ROOT/$image); do
       cp -v "$IMAGE_ROOT/$image/$file" "$TEMPLATE_ROOT/$image_name/"
     done
+
+    # fix missing shebang
+    echo '#!/bin/bash' > "$TEMPLATE_ROOT/$image_name/cyber-dojo.sh"
+    cat "$IMAGE_ROOT/$image/cyber-dojo.sh" >> "$TEMPLATE_ROOT/$image_name/cyber-dojo.sh"
   fi
 done

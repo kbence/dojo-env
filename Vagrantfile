@@ -9,7 +9,7 @@ PREPARE_DOJO = <<EOF
 CYBERDOJO_LOCATION=/usr/src/cyberdojo
 
 sudo apt-get update -y
-sudo apt-get install -y git jq
+sudo apt-get install -y git
 
 if ! [ -d "$CYBERDOJO_LOCATION" ]; then
   git clone https://github.com/JonJagger/cyberdojo.git "$CYBERDOJO_LOCATION"

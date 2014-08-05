@@ -31,14 +31,9 @@ start_vagrant()
   fi
 }
 
-docker_cmd()
-{
-  vagrant ssh --command "sudo docker run -i -t -v /home/vagrant:/root $(echo $@)" 2>/dev/null
-}
-
 get_template_roots()
 {
-  find $SCRIPT_ROOT/templates -mindepth 1 -maxdepth 1 -type d
+  find "$APP_ROOT"/templates -mindepth 1 -maxdepth 1 -type d
 }
 
 read_line()
@@ -69,13 +64,29 @@ choose_template()
   TEMPLATE=$(get_template_roots | head -n "$template_num" | tail -n 1)
 }
 
-SCRIPT_ROOT=$(dirname $0)
-TARGET_DIR="$1"
+sedize()
+{
+  echo "$@" | sed -e 's/\//\\\//g'
+}
+
+APP_ROOT=$(dirname $0)
+
+PROJECT_NAME=$(read_line "Project name" "project-$RANDOM")
+TARGET_DIR="$APP_ROOT/projects/$PROJECT_NAME"
 
 cd $(dirname $0)
 check_environment
 start_vagrant
 
 choose_template
+TEMPLATE_NAME=$(basename $TEMPLATE)
+
 mkdir -p "$TARGET_DIR"
-cp $TEMPLATE/*   $TARGET_DIR
+LINKNAME="$TEMPLATE_NAME-$RANDOM"
+
+cp "$TEMPLATE"/* "$TARGET_DIR"
+sed -e "s/PROJECTNAME/$(sedize $PROJECT_NAME)/g" \
+    -e "s/IMAGENAME/$TEMPLATE_NAME/g" \
+    -e "s/APPROOT/$(sedize $APP_ROOT)/g" \
+    "$APP_ROOT"/scripts/test.sh >"$TARGET_DIR/test.sh"
+chmod +x "$TARGET_DIR/test.sh"

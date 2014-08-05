@@ -4,16 +4,10 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
-PREPARE_DOJO = <<EOF
-
-CYBERDOJO_LOCATION=/usr/src/cyberdojo
+PREPARE_ENV = <<EOF
 
 sudo apt-get update -y
 sudo apt-get install -y git
-
-if ! [ -d "$CYBERDOJO_LOCATION" ]; then
-  git clone https://github.com/JonJagger/cyberdojo.git "$CYBERDOJO_LOCATION"
-fi
 
 EOF
 
@@ -22,7 +16,13 @@ docker_login = false
 if File.exists? "#{__dir__}/.docker-credentials.rb"
   require "#{__dir__}/.docker-credentials.rb"
 
-  DOCKER_LOGIN = <<EOF
+  PREPARE_BUILD = <<EOF
+
+CYBERDOJO_LOCATION=/usr/src/cyberdojo
+
+if ! [ -d "$CYBERDOJO_LOCATION" ]; then
+  git clone https://github.com/JonJagger/cyberdojo.git "$CYBERDOJO_LOCATION"
+fi
 
 sudo docker login --username="#{DOCKER_USERNAME}" --password="#{DOCKER_PASSWORD}" --email="#{DOCKER_EMAIL}"
 
@@ -55,9 +55,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "docker" do end
 
-  config.vm.provision "shell", inline: PREPARE_DOJO
+  config.vm.provision "shell", inline: PREPARE_ENV
 
   if docker_login
-    config.vm.provision "shell", inline: DOCKER_LOGIN
+    config.vm.provision "shell", inline: PREPARE_BUILD
   end
 end
